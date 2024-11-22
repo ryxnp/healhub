@@ -1,0 +1,115 @@
+/* Add this to your shop.css file */
+
+/* Reset some default styles */
+body, h1, h2, h3, p {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+/* Product listing styles */
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.product-item {
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin: 20px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    border: 2px solid #333; /* Make the outline darker */
+    width: 200px; /* Set a fixed width for each product item */
+}
+
+.product-item:hover {
+    transform: translateY(-5px);
+}
+
+.product-item h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 18px; /* Increase font size */
+}
+
+.product-item p {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 16px; /* Increase font size */
+}
+
+.product-item button {
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px; /* Increase font size */
+    transition: background-color 0.3s ease;
+}
+
+.product-item button:hover {
+    background-color: #45a049;
+}
+
+.product-image {
+    width: 100%;
+    height: 200px; /* Set a fixed height */
+    object-fit: cover; /* Ensure images are equally sized and centered */
+    display: block;
+    margin-bottom: 10px;
+}
+
+.product-details {
+    margin-top: 10px;
+}
+
+.product-price {
+    font-weight: bold;
+}
+
+.container {
+    margin-top: 70px; /* Adjust the margin to provide space for the fixed header */
+}
+
+.product-image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px; /* Set a fixed height for each image container */
+}
+
+.product-image {
+    width: auto;
+    height: 100%; /* Ensure the image takes the full height of the container */
+    max-width: 100%;
+    max-height: 100%;
+}
+
+input.highlight {
+    border: 1px solid #5e72e4; /* Change the color to your desired highlight color */
+    box-shadow: 0 0 5px rgba(94, 114, 228, 0.5); /* Change the color and size to your desired shadow */
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header {
+    position: relative;
+}

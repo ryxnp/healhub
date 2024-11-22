@@ -1,0 +1,141 @@
+/* cart.css */
+
+/* Cart button styles */
+.cart-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #333;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    z-index: 1001;
+}
+
+.cart-toggle:hover {
+    background-color: #333;
+    color: #fff;
+}
+
+/* Cart container styles */
+.cart-container {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    background-color: #fff;
+    border-left: 1px solid #ddd;
+    padding: 20px; /* Adjust the padding as needed */
+    width: 370px; /* Adjust the width as needed */
+    height: 100%;
+    overflow-y: auto; /* Enable vertical scroll */
+    box-shadow: -5px 0 5px -5px #333;
+    z-index: 1000;
+    transition: right 0.3s ease-in-out;
+}
+
+/* Cart total styles */
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Table styles for cart items */
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    overflow-y: auto; /* Enable vertical scroll for the table */
+    table-layout: fixed; /* Set the table layout to fixed */
+}
+
+.cart-container th,
+.cart-container td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    overflow: hidden; /* Hide overflowing content */
+    text-overflow: ellipsis; /* Show ellipsis for overflow */
+    white-space: nowrap; /* Prevent wrapping */
+}
+
+.quantity-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.remove-quantity {
+    width: 30px; /* Adjusted width */
+}
+
+.back-button,
+.view-cart-button {
+    display: block;
+    margin-top: 20px;
+    padding: 10px;
+    text-align: center;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.back-button:hover,
+.view-cart-button:hover {
+    background-color: #0056b3;
+}
+/* Add this CSS to your existing styles or create a new style section */
+/* Add this to your cart.css file or your existing stylesheet */
+
+.quantity-button {
+    border-radius: 30%;
+    overflow: hidden;
+    width: 30px; /* Adjust the width as needed */
+    height: 30px; /* Adjust the height as needed */
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity-button.decrease-button {
+    background-color: rgb(9, 63, 124);
+    color: #fff;
+}
+
+.quantity-button.increase-button {
+    background-color: #4CAF50;
+    color: #fff;
+}
+
+/* Additional styling for the quantity text */
+.quantity-text {
+    font-size: 14px; /* Adjust the font size as needed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-item-quantity {
+    display:inline-flexbox;
+    align-items: center;
+    justify-content: space-between;
+    width: flex; /* Adjust the width as needed */
+    text-align: center;
+}
+
+.cart-item .quantity-button {
+    margin: 15px; /* Remove default margin */
+}
+
+.cart-item-image {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px; /* Add margin between image and text */
+    object-fit: cover; /* Ensure images cover the entire container, maintaining aspect ratio */
+}
