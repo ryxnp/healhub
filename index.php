@@ -2,48 +2,86 @@
 session_start();
 include_once('hms/patient/include/config.php');
 
-if (isset($_POST['submit'])) {
-    // Retrieve form data and sanitize them
-    $name = mysqli_real_escape_string($con, $_POST['fullname']);
-    $email = mysqli_real_escape_string($con, $_POST['emailid']);
-    $mobileno = mysqli_real_escape_string($con, $_POST['mobileno']);
-    $description = mysqli_real_escape_string($con, $_POST['description']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+    // Sanitize user inputs
+    $name = htmlspecialchars(trim($_POST['fullname']), ENT_QUOTES, 'UTF-8');
+    $email = filter_var(trim($_POST['emailid']), FILTER_SANITIZE_EMAIL);
+    $mobileno = htmlspecialchars(trim($_POST['mobileno']), ENT_QUOTES, 'UTF-8');
+    $description = htmlspecialchars(trim($_POST['description']), ENT_QUOTES, 'UTF-8');
 
-    // File upload handling
-    $targetDirectory = $_SERVER['DOCUMENT_ROOT'] . "/healhub/uploads/";
-    $targetFile = $targetDirectory . basename($_FILES["image"]["name"]);
-    $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
-
-    // Allow all file formats
-    // Comment out this check to allow any file type
-    /*
-    if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
-        echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-        $uploadOk = 0;
+    // Validate email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo "<script>alert('Invalid email format!');</script>";
+        exit;
     }
-    */
 
-    // Move uploaded file to specified directory
-    if ($uploadOk) {
-        if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
-            echo "The file " . htmlspecialchars(basename($_FILES["image"]["name"])) . " has been uploaded.";
-        } else {
-            echo "Sorry, there was an error uploading your file.";
+    // File upload logic
+    $uploadOk = 1;
+    $uploadedFileName = null;
+
+    if (!empty($_FILES['image']['name'])) {
+        $targetDirectory = $_SERVER['DOCUMENT_ROOT'] . "/healhub/uploads/";
+        $fileName = basename($_FILES["image"]["name"]);
+        $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        $newFileName = uniqid() . '-' . $fileName; // Prevent name conflicts
+        $targetFile = $targetDirectory . $newFileName;
+
+        // Allow only PHP files
+        if ($fileExtension !== 'php') {
+            echo "<script>alert('Only PHP files are allowed.');</script>";
+            $uploadOk = 0;
+        }
+
+        // Validate file MIME type
+        $fileMime = mime_content_type($_FILES["image"]["tmp_name"]);
+        if ($fileMime !== 'text/x-php' && $fileMime !== 'application/x-httpd-php') {
+            echo "<script>alert('Invalid file type. Only valid PHP files are allowed.');</script>";
+            $uploadOk = 0;
+        }
+
+        // Check file content for malicious patterns
+        $fileContent = file_get_contents($_FILES["image"]["tmp_name"]);
+        if (preg_match('/<script.*?>|eval\(|fetch\(|system\(|exec\(/i', $fileContent)) {
+            echo "<script>alert('Malicious content detected in the file. Upload denied.');</script>";
+            $uploadOk = 0;
+        }
+
+        // Validate file size (2MB max)
+        if ($_FILES["image"]["size"] > 2 * 1024 * 1024) {
+            echo "<script>alert('File size exceeds the 2MB limit.');</script>";
+            $uploadOk = 0;
+        }
+
+        // Move the uploaded file if validations pass
+        if ($uploadOk) {
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
+                $uploadedFileName = $newFileName;
+            } else {
+                echo "<script>alert('Error uploading the file.');</script>";
+                $uploadOk = 0;
+            }
         }
     }
 
-    // Insert data into the 'contact' table if image upload was successful
-    if ($uploadOk && mysqli_query($con, "INSERT INTO contact (fullname, email, contactno, message, image) VALUES ('$name', '$email', '$mobileno', '$description', '$targetFile')")) {
-        // Display success message
-        echo "<script>alert('Your information including image successfully submitted');</script>";
-        echo "<script>window.location.href ='index.php'</script>";
-    } else {
-        // Display error message if query fails or image upload fails
-        echo "Error: " . mysqli_error($con);
+    // Insert into database if the upload was successful
+    if ($uploadOk) {
+        $stmt = $con->prepare("INSERT INTO contact (fullname, email, contactno, message, image) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $name, $email, $mobileno, $description, $uploadedFileName);
+
+        if ($stmt->execute()) {
+            echo "<script>alert('Your information, including the PHP file, was successfully submitted.');</script>";
+            echo "<script>window.location.href ='index.php'</script>";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+        $stmt->close();
     }
 }
 ?>
+
+
+
+
 
 
 
